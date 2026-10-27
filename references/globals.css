@@ -1,0 +1,543 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap");
+@import "tailwindcss";
+
+/* 「口袋潜水」像素海洋主题 —— 星露谷物语（暖木/奶油面板）× 潜水员戴夫（深海蓝绿）融合风
+   设计基线见 docs/decisions/0004 */
+:root {
+  /* 深海（戴夫） */
+  --abyss: #06222b;
+  --deep: #0b3c49;
+  --teal: #1b7f79;
+  --foam: #9adbc8;
+  /* 暖沙/木头（星露谷） */
+  --sand: #f7f3e3;
+  --ink: #3a2a18;
+  --wood: #7a4a21;
+  --wood-dark: #4a2c12;
+  --coral: #f4a259;
+  --kelp: #3fa46a;
+  --gold: #e8c060;
+}
+
+@theme inline {
+  --color-abyss: var(--abyss);
+  --color-deep: var(--deep);
+  --color-teal: var(--teal);
+  --color-foam: var(--foam);
+  --color-sand: var(--sand);
+  --color-ink: var(--ink);
+  --color-wood: var(--wood);
+  --color-wood-dark: var(--wood-dark);
+  --color-coral: var(--coral);
+  --color-kelp: var(--kelp);
+  --color-gold: var(--gold);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--abyss);
+  color: var(--sand);
+  font-family: var(--font-sans), "PingFang SC", "Microsoft YaHei", sans-serif;
+  /* 浅字在背景图亮区也可读（面板/按钮内部已单独关闭） */
+  text-shadow: 0 1px 3px rgba(0, 10, 25, 0.6);
+}
+
+/* 面板与控件内部关闭文字阴影，保持奶油底阅读体验 */
+.px-panel,
+.px-panel-dark,
+.px-btn,
+.px-badge,
+.px-input,
+.px-index,
+.px-ghost-num {
+  text-shadow: none;
+}
+
+/* ── 全站背景层（黎塞留岩俯瞰图）与遮罩层 ── */
+.px-site-bg {
+  /* 元素本身已是 fixed 铺满视口，无需 background-attachment: fixed
+     （避免 full-page 截图 / iOS Safari 的 fixed 附件渲染差异） */
+  background: url(/assets/richelieu-bg.webp) center / cover no-repeat;
+  image-rendering: pixelated;
+}
+.px-site-mask {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 20, 40, 0.55) 0%,
+    rgba(0, 10, 25, 0.75) 100%
+  );
+}
+
+a {
+  color: inherit;
+}
+
+/* 像素字体（Press Start 2P / VT323 走 Google Fonts；中文回退系统字体） */
+.font-pixel {
+  font-family: "Press Start 2P", "VT323", "Fusion Pixel", "Zpix", ui-monospace,
+    "PingFang SC", "Microsoft YaHei", monospace;
+  letter-spacing: 0.08em;
+}
+
+/* ── 复古立体标题（层叠硬阴影，不用平滑渐变） ── */
+.title-retro {
+  color: var(--sand);
+  text-shadow: 3px 3px 0 var(--abyss), 6px 6px 0 rgba(0, 0, 0, 0.28);
+  letter-spacing: 0.14em;
+}
+
+.title-retro-coral {
+  color: var(--coral);
+  text-shadow: 3px 3px 0 #7a3a10, 6px 6px 0 rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.14em;
+}
+
+/* ── 奶油面板（星露谷式：木框 + 厚投影） ── */
+.px-panel {
+  background: var(--sand);
+  color: var(--ink);
+  border: 3px solid var(--wood);
+  border-radius: 4px;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* 深海面板（暗色数据区用） */
+.px-panel-dark {
+  background: #0e4a58;
+  color: var(--sand);
+  border: 3px solid #1b6a76;
+  border-radius: 4px;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* 可交互卡片：悬停整卡上浮 + 边缘点亮 */
+.px-card {
+  transition: transform 0.08s steps(2), box-shadow 0.08s steps(2),
+    border-color 0.08s steps(2);
+}
+.px-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--coral);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(244, 162, 89, 0.35),
+    inset 0 2px 0 rgba(255, 255, 255, 0.55);
+}
+.px-card:active {
+  transform: translateY(-1px);
+}
+
+/* ── 像素按钮：按下下沉 4px ── */
+.px-btn {
+  --btn-bg: var(--coral);
+  --btn-fg: var(--abyss);
+  --btn-edge: #b96a2a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.2rem;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 3px solid var(--btn-edge);
+  border-radius: 3px;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.06s steps(2), box-shadow 0.06s steps(2),
+    filter 0.06s steps(2);
+}
+.px-btn:hover {
+  filter: brightness(1.08);
+}
+.px-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.4);
+}
+.px-btn:disabled,
+.px-btn[data-disabled="true"] {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.px-btn-teal {
+  --btn-bg: var(--teal);
+  --btn-fg: var(--sand);
+  --btn-edge: #0d4a46;
+}
+.px-btn-wood {
+  --btn-bg: var(--wood);
+  --btn-fg: var(--sand);
+  --btn-edge: var(--wood-dark);
+}
+.px-btn-ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--sand);
+  --btn-edge: var(--teal);
+}
+/* 浅色面板上的 ghost 按钮： sand 字色在米白面板上不可见，改用深墨字色 */
+.px-btn-ghost-ink {
+  --btn-bg: transparent;
+  --btn-fg: var(--ink);
+  --btn-edge: var(--wood);
+}
+.px-btn-sm {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+  border-width: 2px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* ── 像素徽章 ── */
+.px-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 2px 8px;
+  border: 2px solid;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+}
+.px-badge-recruiting {
+  color: #0d4a46;
+  background: var(--foam);
+  border-color: #0d4a46;
+}
+.px-badge-confirmed {
+  color: var(--abyss);
+  background: var(--coral);
+  border-color: #b96a2a;
+}
+.px-badge-full {
+  color: var(--sand);
+  background: #b23b3b;
+  border-color: #6e1f1f;
+}
+.px-badge-muted {
+  color: var(--sand);
+  background: #5d6b6e;
+  border-color: #39454a;
+}
+.px-badge-gold {
+  color: var(--abyss);
+  background: var(--gold);
+  border-color: #9a7520;
+}
+
+/* ── 像素输入框 ── */
+.px-input {
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--wood);
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.08);
+}
+.px-input::placeholder {
+  color: #a08b6d;
+}
+.px-input:focus {
+  outline: none;
+  border-color: var(--coral);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 0 0 2px rgba(244, 162, 89, 0.4);
+}
+
+/* ── 像素波浪分隔条 ── */
+.px-wave {
+  height: 8px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--teal) 0 12px,
+    transparent 12px 20px,
+    var(--foam) 20px 24px,
+    transparent 24px 32px
+  );
+  opacity: 0.6;
+}
+
+/* ── 分区标题：像素菱形 + 木纹底 ── */
+.px-section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 800;
+  color: var(--sand);
+  letter-spacing: 0.1em;
+}
+.px-section-title::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: var(--coral);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  transform: rotate(45deg);
+}
+
+/* ── 空状态：像素鱼 + 俏皮文案 ── */
+.px-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1rem;
+  color: #8a765c;
+}
+
+/* ── 表单校验失败抖动 ── */
+@keyframes px-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+.px-shake {
+  animation: px-shake 0.2s steps(4) 2;
+}
+
+/* ── 像素方块加载动画 ── */
+@keyframes px-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+.px-loading {
+  display: inline-flex;
+  gap: 6px;
+}
+.px-loading > span {
+  width: 10px;
+  height: 10px;
+  background: var(--foam);
+  animation: px-blink 0.9s steps(2) infinite;
+}
+.px-loading > span:nth-child(2) {
+  animation-delay: 0.15s;
+  background: var(--coral);
+}
+.px-loading > span:nth-child(3) {
+  animation-delay: 0.3s;
+  background: var(--gold);
+}
+
+/* ── 气泡上升（背景常驻） ── */
+@keyframes bubble-rise {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.55;
+  }
+  90% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(-105vh) translateX(12px);
+    opacity: 0;
+  }
+}
+
+/* ── 鱼群横穿屏幕 ── */
+@keyframes swim-across {
+  0% {
+    transform: translateX(-15vw);
+  }
+  100% {
+    transform: translateX(115vw);
+  }
+}
+
+/* ── 水草摇摆 ── */
+@keyframes seaweed-sway {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+/* ── 漂浮（英雄区装饰） ── */
+@keyframes px-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ── 标题呼吸光（深海灯） ── */
+@keyframes title-glow {
+  0%,
+  100% {
+    text-shadow: 3px 3px 0 var(--abyss), 6px 6px 0 rgba(0, 0, 0, 0.28);
+  }
+  50% {
+    text-shadow: 3px 3px 0 var(--abyss), 6px 6px 0 rgba(0, 0, 0, 0.28),
+      0 0 18px rgba(154, 219, 200, 0.65);
+  }
+}
+.site-title {
+  animation: title-glow 4s ease-in-out infinite;
+}
+
+.pixel-bubble {
+  position: absolute;
+  bottom: -2rem;
+  border-radius: 2px;
+  background: rgba(247, 243, 227, 0.5);
+  box-shadow: inset -2px -2px 0 rgba(11, 60, 73, 0.5);
+  image-rendering: pixelated;
+  animation: bubble-rise linear infinite;
+}
+
+.pixel-fish-swim {
+  animation: swim-across linear infinite;
+}
+
+.pixel-seaweed {
+  transform-origin: bottom center;
+  animation: seaweed-sway 5s ease-in-out infinite;
+}
+
+.px-bob {
+  animation: px-bob 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-bubble,
+  .pixel-fish-swim,
+  .pixel-seaweed,
+  .px-bob,
+  .site-title,
+  .px-loading > span,
+  .px-shake,
+  .px-marquee-track {
+    animation: none;
+  }
+}
+
+/* ── 滚动条带（marquee） ── */
+@keyframes px-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.px-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.px-marquee-track {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  animation: px-marquee 32s linear infinite;
+}
+.px-marquee:hover .px-marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── 编辑式分区编号 ── */
+.px-index {
+  font-family: "Fusion Pixel", "Zpix", ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--coral);
+  border: 2px solid var(--coral);
+  padding: 1px 7px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ── 幽灵大数字（卡片序号装饰） ── */
+.px-ghost-num {
+  font-family: "Fusion Pixel", "Zpix", ui-monospace, monospace;
+  font-size: 3rem;
+  line-height: 1;
+  color: rgba(122, 74, 33, 0.18);
+  font-weight: 800;
+}
+
+/* ── 纵向文字（侧轨装饰） ── */
+.px-vertical {
+  writing-mode: vertical-rl;
+  letter-spacing: 0.35em;
+}
+
+/* ── 横向滚动条带（隐藏原生滚动条） ── */
+.px-strip {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+.px-strip::-webkit-scrollbar {
+  display: none;
+}
+.px-strip > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* ── 英雄区巨型标题 ── */
+.px-display {
+  font-family: "Fusion Pixel", "Zpix", ui-monospace, monospace;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.15;
+}
+
+/* ── 潜点世界地图地形色（/sites/map，src/lib/world-map.ts） ──
+   像素格用微暗角做立体感；颜色贴合全站海洋/暖木调色板（docs/decisions/0004） */
+.map-cell {
+  position: absolute;
+}
+.map-cell-land {
+  box-shadow: inset 0 0 0 1px rgba(6, 34, 43, 0.18);
+}
+.map-snow {
+  background: #e6f2f0;
+}
+.map-mountain {
+  background: #8a7360;
+}
+.map-desert {
+  background: #d9b45c;
+}
+.map-coast {
+  background: #efe3bd;
+}
+.map-tropic {
+  background: #2f9e5f;
+}
+.map-temperate {
+  background: #58a878;
+}
+.map-boreal {
+  background: #2c7a55;
+}
+.map-shallow {
+  background: rgba(27, 127, 121, 0.32);
+}
